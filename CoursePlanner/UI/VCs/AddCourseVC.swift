@@ -7,16 +7,26 @@
 //
 
 import UIKit
+import CoreData
 
 class AddCourseVC: UIViewController {
     
-    let coreDataStack
+    let coreDataStack = CoreDataStack.instance
     
     @IBOutlet weak var courseTitleField: UITextField!
     @IBOutlet weak var timeField: UITextField!
     
-    @IBAction func saveTapped(_ sender: Any) {
+    @IBAction func savePressed(_ sender: Any) {
         guard let title = courseTitleField.text, let time = timeField.text
+            else {return}
+        
+        let course = Course(context: coreDataStack.privateContext)
+        course.name = title
+        course.time = time
+        
+        coreDataStack.saveTo(context: coreDataStack.privateContext)
+        
+        self.navigationController?.popViewController(animated: true)
     }
     
     override func viewDidLoad() {
